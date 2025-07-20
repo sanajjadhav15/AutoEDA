@@ -1,7 +1,7 @@
 # styles.py
 
 def get_custom_css():
-    """Return modern CSS styling for the AutoEDA landing page"""
+    """Return modern CSS styling for the AutoEDA landing page and UI"""
     return """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;600;700&display=swap');
@@ -12,35 +12,29 @@ def get_custom_css():
         color: #f8fafc;
     }
 
-    /* Hero Section */
+    /* Container for hero title and subtitle */
+    .hero-container {
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
     .hero-title {
         font-size: 3.25rem;
         font-weight: 700;
         color: #22c55e;
-        text-align: center;
-        margin-bottom: 1rem;
         line-height: 1.2;
     }
 
     .hero-subtitle {
         font-size: 1.125rem;
         color: #cbd5e1;
-        text-align: center;
-        margin-bottom: 3rem;
         font-weight: 400;
         line-height: 1.6;
         max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .hero-container {
-    max-width: 900px;
-    margin: 0 auto;
-    text-align: center;
+        margin: 0 auto 2.5rem auto;
     }
 
-
-    /* Features Grid */
     .features-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -56,7 +50,6 @@ def get_custom_css():
         padding: 2rem;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
-        text-align: left;
         border: 1px solid #334155;
     }
 
@@ -85,46 +78,7 @@ def get_custom_css():
         line-height: 1.6;
     }
 
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.25rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1rem;
-        }
-
-        .feature-card {
-            padding: 1.5rem;
-        }
-    }
-
-    /* Hide Streamlit default UI */
-    #MainMenu, header, footer { visibility: hidden; }
-    </style>
-    """
-
-def feature_card(icon, title, description):
-    """Generate one feature card"""
-    return f"""
-    <div class='feature-card'>
-        <div class='feature-icon'>{icon}</div>
-        <div class='feature-title'>{title}</div>
-        <div class='feature-description'>{description}</div>
-    </div>
-    """
-
-def get_floating_shapes():
-    """Return floating decorative background shapes"""
-    return """
-    <div class='floating-shapes'>
-        <div class='shape shape-1'></div>
-        <div class='shape shape-2'></div>
-        <div class='shape shape-3'></div>
-    </div>
-
-    <style>
+    /* Floating background shapes */
     .floating-shapes {
         position: fixed;
         top: 0;
@@ -171,5 +125,74 @@ def get_floating_shapes():
         0%, 100% { transform: translateY(0px) rotate(0deg); }
         50% { transform: translateY(-20px) rotate(180deg); }
     }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.25rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+        }
+    }
+
+    div.stButton > button {
+        background-color: #1e293b;
+        color: white;
+        font-weight: 500;
+        border-radius: 0.75rem;
+        padding: 0.6rem 1.5rem;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+
+    div.stButton > button:hover {
+        background-color: #22c55e;
+        color: #ffffff;
+    }    
+
+    /* Hide Streamlit native UI */
+    #MainMenu, header, footer { visibility: hidden; }
     </style>
     """
+
+
+def feature_card(icon, title, description):
+    """Generate one feature card"""
+    return f"""
+    <div class='feature-card'>
+        <div class='feature-icon'>{icon}</div>
+        <div class='feature-title'>{title}</div>
+        <div class='feature-description'>{description}</div>
+    </div>
+    """
+
+
+def get_floating_shapes():
+    """Return floating decorative background shapes"""
+    return """
+    <div class='floating-shapes'>
+        <div class='shape shape-1'></div>
+        <div class='shape shape-2'></div>
+        <div class='shape shape-3'></div>
+    </div>
+    """
+
+
+def section_block(title):
+    """Styled section title block"""
+    return f"""
+    <h3 style='
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #22c55e;
+    '>{title}</h3>
+    """
+
