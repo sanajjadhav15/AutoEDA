@@ -7,6 +7,7 @@ from ui import styles
 from eda.type_inference import detect_column_types
 from eda.summary_stats import generate_summary
 from eda.missing_values import get_missing_value_report, plot_missing_bar
+from eda.preprocess import preprocess_data
 
 st.set_page_config(page_title="AutoEDA", layout="wide")
 
@@ -26,13 +27,19 @@ if "page" not in st.session_state:
 # -------------------------- 
 # Navigation section using real Streamlit buttons
 st.markdown("<div style='text-align: center; margin-top: 1rem;'>", unsafe_allow_html=True)
-nav_col1, nav_col2 = st.columns([1, 1])
+nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([1, 1, 1, 1])
 with nav_col1:
     if st.button("🏠 Home", use_container_width=True, key="home_button"):
         st.session_state.page = "Home"
 with nav_col2:
     if st.button("📁 Upload Dataset", use_container_width=True, key="upload_button"):
         st.session_state.page = "Upload"
+with nav_col3:
+    if st.button("🧼 Preprocess Data", use_container_width=True, key="preprocess_button"):
+        st.session_state.page = "Preprocess"
+with nav_col4:
+    if st.button("📊 Visualizations", use_container_width=True, key="visualizations_button"):
+        st.session_state.page = "Visualizations"
 st.markdown("</div><hr>", unsafe_allow_html=True)
 
 # --------------------------
@@ -45,6 +52,7 @@ elif st.session_state.page == "Upload":
     df = upload_file()
 
     if df is not None:
+        st.session_state.df_raw = df
         st.markdown(styles.section_block("👀 Data Preview"), unsafe_allow_html=True)
         st.dataframe(df.head(), use_container_width=True)
 
@@ -96,3 +104,46 @@ elif st.session_state.page == "Upload":
                 st.plotly_chart(fig, use_container_width=True)
 
 
+elif st.session_state.page == "Preprocess":
+    if "df_raw" not in st.session_state:
+        st.warning("⚠️ Please upload a dataset first!")
+    else:
+        from eda.preprocess import preprocess_data  # ✅ updated function name
+
+        st.markdown(styles.section_block("🧼 Data Preprocessing"), unsafe_allow_html=True)
+        st.write("Click the button below to clean and standardize your dataset.")
+
+        if st.button("✨ Run Preprocessing", use_container_width=True):
+            df_cleaned = preprocess_data(st.session_state.df_raw)
+            st.session_state.df_cleaned = df_cleaned
+            st.success("✅ Dataset cleaned and stored as `df_cleaned` in memory.")
+
+        if "df_cleaned" in st.session_state:
+            st.markdown("### 🔍 Cleaned Data Preview")
+            st.dataframe(st.session_state.df_cleaned.head(15), use_container_width=True)
+
+    if "df_cleaned" in st.session_state:
+        df_cleaned = st.session_state.df_cleaned
+
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("📐 Rows", df_cleaned.shape[0])
+            st.metric("📏 Columns", df_cleaned.shape[1])
+            st.metric("🧪 Missing Cells", df_cleaned.isnull().sum().sum())
+        with col2:
+            st.write("**🧬 Cleaned Data Types:**")
+            st.dataframe(df_cleaned.dtypes.reset_index().rename(columns={"index": "Column", 0: "Data Type"}))
+
+        st.markdown("### 👀 Preview Sample Rows")
+        st.dataframe(df_cleaned.sample(5), use_container_width=True)
+
+elif st.session_state.page == "Visualizations":
+    if "df_cleaned" not in st.session_state:
+        st.warning("⚠️ Please run preprocessing first!")
+    else:
+        from eda.basic_viz import show_basic_visualizations
+
+        st.markdown(styles.section_block("📊 Auto Visualizations"), unsafe_allow_html=True)
+        st.write("This section shows histograms, bar charts, time trends, and correlation heatmaps automatically.")
+
+        show_basic_visualizations(st.session_state.df_cleaned)
