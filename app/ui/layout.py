@@ -23,10 +23,10 @@ def render_landing_page():
     features = [
         ("📁", "Smart Data Upload", "Seamlessly import CSV and Excel files with intelligent format detection and instant preview."),
         ("📊", "Dynamic Visualizations", "Auto-generate beautiful, interactive charts based on your data types."),
-        ("🧠", "AI-Powered Insights", "Uncover patterns, anomalies, and trends with smart ML-powered analysis."),
-        ("📋", "Interactive Metadata", "Get detailed column-wise summaries, missing values, and data types."),
+        ("🧠", "Smart Data Insights", "Discover trends, correlations, and anomalies with smart analysis."),
+        ("📋", "Detailed Data Overview", "Get detailed column-wise summaries, missing values, and data types."),
         ("📤", "Professional Reports", "Export polished PDF or HTML reports with full visual summaries."),
-        ("⚠️", "Data Quality Warnings", "Get automatic alerts for duplicates, nulls, outliers, and more.")
+        ("⚠️", "Data Quality Warnings", "Automatic checks for duplicates, nulls, and outliers help ensure your data is analysis-ready.")
     ]
 
     cards = "".join([

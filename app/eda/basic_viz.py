@@ -26,13 +26,13 @@ def show_basic_visualizations(df: pd.DataFrame):
                 with col2:
                     fig2 = px.box(df, y=col, title=f"Boxplot of {col}")
                     st.plotly_chart(fig2, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        # st.markdown('</div>', unsafe_allow_html=True)
 
     # -------------------
     # 🔠 Categorical Columns
     # -------------------
     if cat_cols:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        # st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown(f"### 🔠 Categorical Column Distributions ({len(cat_cols)})")
 
         for col in cat_cols:
@@ -53,7 +53,7 @@ def show_basic_visualizations(df: pd.DataFrame):
     # 🕒 Datetime Columns
     # -------------------
     if dt_cols:
-        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        # st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown(f"### 🕒 Time Series Trends ({len(dt_cols)})")
 
         for col in dt_cols:
@@ -64,7 +64,7 @@ def show_basic_visualizations(df: pd.DataFrame):
 
                 fig = px.line(df_time, x=col, y='count', title=f"Time Trend of {col}")
                 st.plotly_chart(fig, use_container_width=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+        # st.markdown('</div>', unsafe_allow_html=True)
 
     # -------------------
     # Empty state
