@@ -154,7 +154,36 @@ def get_custom_css():
     div.stButton > button:hover {
         background-color: #22c55e;
         color: #ffffff;
-    }    
+    }
+
+    .type-section {
+    background-color: #1e293b;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #334155;
+    }
+
+    .type-badge {
+        display: inline-block;
+        background-color: #22c55e;
+        color: white;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        margin: 0.25rem 0.4rem 0.25rem 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .section-card {
+        background-color: #1e293b;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid #334155;
+    }
+
+
 
     /* Hide Streamlit native UI */
     #MainMenu, header, footer { visibility: hidden; }
