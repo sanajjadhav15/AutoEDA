@@ -182,7 +182,11 @@ def get_custom_css():
         margin-bottom: 2rem;
         border: 1px solid #334155;
     }
-
+    .streamlit-expanderHeader {
+        font-weight: 600;
+        color: #22c55e;
+        font-size: 1rem;
+    }
 
 
     /* Hide Streamlit native UI */

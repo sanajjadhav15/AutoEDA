@@ -144,6 +144,6 @@ elif st.session_state.page == "Visualizations":
         from eda.basic_viz import show_basic_visualizations
 
         st.markdown(styles.section_block("📊 Auto Visualizations"), unsafe_allow_html=True)
-        st.write("This section shows histograms, bar charts, time trends, and correlation heatmaps automatically.")
+        st.write("This section shows visualizations automatically.")
 
         show_basic_visualizations(st.session_state.df_cleaned)
