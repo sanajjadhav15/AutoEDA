@@ -188,12 +188,22 @@ def get_custom_css():
         font-size: 1rem;
     }
 
+    .null-flag-badge {
+        display: inline-block;
+        background-color: #f43f5e;
+        color: white;
+        font-weight: 500;
+        font-size: 0.9rem;
+        padding: 0.3rem 0.7rem;
+        border-radius: 999px;
+        margin: 0.25rem 0.4rem 0.25rem 0;
+    }
+
 
     /* Hide Streamlit native UI */
     #MainMenu, header, footer { visibility: hidden; }
     </style>
     """
-
 
 def feature_card(icon, title, description):
     """Generate one feature card"""

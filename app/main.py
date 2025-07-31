@@ -27,7 +27,7 @@ if "page" not in st.session_state:
 # -------------------------- 
 # Navigation section using real Streamlit buttons
 st.markdown("<div style='text-align: center; margin-top: 1rem;'>", unsafe_allow_html=True)
-nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([1, 1, 1, 1])
+nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns([1, 1, 1, 1, 1])
 with nav_col1:
     if st.button("🏠 Home", use_container_width=True, key="home_button"):
         st.session_state.page = "Home"
@@ -40,6 +40,9 @@ with nav_col3:
 with nav_col4:
     if st.button("📊 Visualizations", use_container_width=True, key="visualizations_button"):
         st.session_state.page = "Visualizations"
+with nav_col5:
+    if st.button("🧠 Smart Insights", use_container_width=True, key="insights_button"):
+        st.session_state.page = "Smart Insights"
 st.markdown("</div><hr>", unsafe_allow_html=True)
 
 # --------------------------
@@ -147,3 +150,51 @@ elif st.session_state.page == "Visualizations":
         st.write("This section shows visualizations automatically.")
 
         show_basic_visualizations(st.session_state.df_cleaned)
+
+elif st.session_state.page == "Smart Insights":
+    st.markdown(styles.section_block("🧠 Smart Insights"), unsafe_allow_html=True)
+    st.markdown(
+        """
+        <p style="color: #94a3b8; font-size: 1rem;">
+        Get automatic data quality checks and smart warnings based on your dataset.
+        These help identify potential issues before deeper analysis.
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
+    if "df_cleaned" not in st.session_state:
+        st.warning("⚠️ Please upload and preprocess a dataset first.")
+    else:
+        from insights.null_flagger import flag_nulls
+        df = st.session_state.df_cleaned
+
+        # --- Section: Null Value Flags ---
+        # st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown(styles.section_block("🔍 Null Value Check"), unsafe_allow_html=True)
+        st.info("Detects columns with more than **30% missing values**.")
+
+        null_flags = flag_nulls(df)
+
+        if not null_flags.empty:
+            st.markdown("#### ⚠️ Columns With High Missing Values")
+            st.dataframe(
+                null_flags.style
+                    .format({"Missing %": "{:.2f}"})
+                    .background_gradient(cmap="OrRd")
+                    .set_properties(**{'text-align': 'left'}),
+                use_container_width=True
+            )
+
+            # ✅ 👉 Insert this snippet below the table
+            st.markdown("**Flagged Columns:**", unsafe_allow_html=True)
+            badges = "".join([f"<span class='null-flag-badge'>{col}</span>" for col in null_flags['Column']])
+            st.markdown(badges, unsafe_allow_html=True)
+
+        else:
+            st.success("✅ Great! No columns have more than 30% missing values.")
+
+        # st.markdown('</div>', unsafe_allow_html=True)
+
+
+
