@@ -170,31 +170,35 @@ elif st.session_state.page == "Smart Insights":
         df = st.session_state.df_cleaned
 
         # --- Section: Null Value Flags ---
-        # st.markdown('<div class="section-card">', unsafe_allow_html=True)
-        st.markdown(styles.section_block("🔍 Null Value Check"), unsafe_allow_html=True)
+        st.markdown("### <span style='color:#10b981'>🔍 Null Value Check</span>", unsafe_allow_html=True)
         st.info("Detects columns with more than **30% missing values**.")
 
         null_flags = flag_nulls(df)
 
         if not null_flags.empty:
             st.markdown("#### ⚠️ Columns With High Missing Values")
-            st.dataframe(
-                null_flags.style
-                    .format({"Missing %": "{:.2f}"})
-                    .background_gradient(cmap="OrRd")
-                    .set_properties(**{'text-align': 'left'}),
-                use_container_width=True
-            )
 
-            # ✅ 👉 Insert this snippet below the table
-            st.markdown("**Flagged Columns:**", unsafe_allow_html=True)
-            badges = "".join([f"<span class='null-flag-badge'>{col}</span>" for col in null_flags['Column']])
-            st.markdown(badges, unsafe_allow_html=True)
+            col1, col2 = st.columns([3, 2])  # Wider for table, narrower for badges
+
+            with col1:
+                st.dataframe(
+                    null_flags.style
+                        .format({"Missing %": "{:.2f}"})
+                        .background_gradient(cmap="OrRd")
+                        .set_properties(**{'text-align': 'left'}),
+                    use_container_width=True
+                )
+
+            with col2:
+                st.markdown("**Flagged Columns:**", unsafe_allow_html=True)
+                badges = "".join([f"<span class='null-flag-badge'>{col}</span><br>" for col in null_flags['Column']])
+                st.markdown(badges, unsafe_allow_html=True)
 
         else:
             st.success("✅ Great! No columns have more than 30% missing values.")
 
-        # st.markdown('</div>', unsafe_allow_html=True)
+
+        # --- Section: Outlier Detection Flags ---
 
         from insights.outlier_detector import aggregate_outlier_flags
 
@@ -210,7 +214,9 @@ elif st.session_state.page == "Smart Insights":
             st.dataframe(outlier_info["summary"].head(15), use_container_width=True)
 
         with col2:
-            st.markdown("#### 🚩 Insight Flags")
+            # some padding for better alignment
+            st.markdown("<div style='padding-top: 3.5rem;'></div>", unsafe_allow_html=True)
+            st.markdown("**Flagged Columns:**")
             if outlier_info["insights"]:
                 for insight in outlier_info["insights"]:
                     st.markdown(f"<div class='insight-flag'>{insight}</div>", unsafe_allow_html=True)

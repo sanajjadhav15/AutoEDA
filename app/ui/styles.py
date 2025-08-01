@@ -189,14 +189,13 @@ def get_custom_css():
     }
 
     .null-flag-badge {
-        display: inline-block;
-        background-color: #f43f5e;
-        color: white;
+        background-color: #ffe6e6;
+        padding: 0.6rem;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        color: #b91c1c;
+        border-left: 5px solid #ef4444;
         font-weight: 500;
-        font-size: 0.9rem;
-        padding: 0.3rem 0.7rem;
-        border-radius: 999px;
-        margin: 0.25rem 0.4rem 0.25rem 0;
     }
 
     .insight-flag {
