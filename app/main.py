@@ -196,5 +196,28 @@ elif st.session_state.page == "Smart Insights":
 
         # st.markdown('</div>', unsafe_allow_html=True)
 
+        from insights.outlier_detector import aggregate_outlier_flags
+
+        st.markdown("### <span style='color:#10b981'>🔎 Outlier Detection</span>", unsafe_allow_html=True)
+        st.info("Detects potential outliers using both IQR and Z-score methods. Columns with >5% outliers are flagged.")
+
+        outlier_info = aggregate_outlier_flags(st.session_state.df_cleaned)
+
+        col1, col2 = st.columns([2, 1])  # Wider summary, narrower flags
+
+        with col1:
+            st.markdown("#### 📊 Outlier Summary")
+            st.dataframe(outlier_info["summary"].head(15), use_container_width=True)
+
+        with col2:
+            st.markdown("#### 🚩 Insight Flags")
+            if outlier_info["insights"]:
+                for insight in outlier_info["insights"]:
+                    st.markdown(f"<div class='insight-flag'>{insight}</div>", unsafe_allow_html=True)
+            else:
+                st.success("✅ No significant outlier patterns detected (threshold: 5%).")
+
+
+
 
 

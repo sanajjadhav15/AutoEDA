@@ -199,6 +199,17 @@ def get_custom_css():
         margin: 0.25rem 0.4rem 0.25rem 0;
     }
 
+    .insight-flag {
+        background-color: #ffe6e6;
+        padding: 0.6rem;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        color: #b91c1c;
+        border-left: 5px solid #ef4444;
+        font-weight: 500;
+    }
+
+
 
     /* Hide Streamlit native UI */
     #MainMenu, header, footer { visibility: hidden; }
