@@ -214,7 +214,6 @@ elif st.session_state.page == "Smart Insights":
             st.dataframe(outlier_info["summary"].head(15), use_container_width=True)
 
         with col2:
-            # some padding for better alignment
             st.markdown("<div style='padding-top: 3.5rem;'></div>", unsafe_allow_html=True)
             st.markdown("**Flagged Columns:**")
             if outlier_info["insights"]:
@@ -224,6 +223,35 @@ elif st.session_state.page == "Smart Insights":
                 st.success("✅ No significant outlier patterns detected (threshold: 5%).")
 
 
+        # --- Section: Skewness Detection ---
+        from insights.skewness_checker import detect_skewness, generate_skewness_insights
 
+        st.markdown("### <span style='color:#10b981'>⚖️ Skewness Detection</span>", unsafe_allow_html=True)
+        st.info("Identifies numeric columns with high skew (|skew| > 1).")
+
+        skew_df = detect_skewness(st.session_state.df_cleaned, threshold=1.0)
+
+        if not skew_df.empty:
+            col1, col2 = st.columns([3, 2])
+
+            with col1:
+                st.dataframe(
+                    skew_df.style
+                        .background_gradient(subset=["Skewness"], cmap="PuOr")
+                        .format({"Skewness": "{:.2f}"})
+                        .set_properties(**{'text-align': 'left'}),
+                    use_container_width=True
+                )
+
+            with col2:
+                skew_insights = generate_skewness_insights(skew_df)
+                if skew_insights:
+                    st.markdown("**Flagged Columns:**")
+                    for insight in skew_insights:
+                        st.markdown(f"<div class='insight-flag'>{insight}</div>", unsafe_allow_html=True)
+                else:
+                    st.success("✅ No highly skewed numeric columns detected.")
+        else:
+            st.success("✅ No numeric columns found to check for skewness.")
 
 
