@@ -253,5 +253,49 @@ elif st.session_state.page == "Smart Insights":
                     st.success("✅ No highly skewed numeric columns detected.")
         else:
             st.success("✅ No numeric columns found to check for skewness.")
+        
+        # --- Section: Cardinality Check ---
+        from insights.cardinality_checker import compute_cardinality, flag_high_cardinality
+
+        st.markdown("### <span style='color:#10b981'>🧮 Cardinality Check</span>", unsafe_allow_html=True)
+        st.info("Warns if a column is almost all unique values (e.g., IDs/emails) which may not be useful for grouping or aggregation.")
+
+        card_full = compute_cardinality(st.session_state.df_cleaned)
+
+        col1, col2 = st.columns([3, 2])
+        with col1:
+            st.subheader("Cardinality Overview")
+            st.dataframe(
+                card_full.style
+                    .format({"Uniqueness %": "{:.2f}"})
+                    .bar(subset=["Uniqueness %"], color="#c084fc"),
+                use_container_width=True
+            )
+
+        with col2:
+            st.markdown("<div style='padding-top: 0.8rem;'></div>", unsafe_allow_html=True)
+            high_card = flag_high_cardinality(st.session_state.df_cleaned, threshold=0.95)
+            if not high_card.empty:
+                st.markdown("#### ⚠️ High Cardinality Columns")
+                st.dataframe(
+                    high_card.style
+                        .format({"Uniqueness %": "{:.2f}"})
+                        .highlight_max(subset=["Uniqueness %"], color="#f87171"),
+                    use_container_width=True
+                )
+                for _, row in high_card.iterrows():
+                    st.markdown(
+                        f"""
+                        <div class='insight-flag'>
+                            ⚠️ Column <b>{row['Column']}</b> has <b>{row['Uniqueness %']}%</b> unique values—may behave like an identifier and add little signal for aggregation.
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
+            else:
+                st.success("✅ No columns exceed high-cardinality threshold.")
+
+
+
 
 
