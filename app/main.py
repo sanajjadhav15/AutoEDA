@@ -166,6 +166,45 @@ elif st.session_state.page == "Smart Insights":
     if "df_cleaned" not in st.session_state:
         st.warning("⚠️ Please upload and preprocess a dataset first.")
     else:
+        #summary
+        from insights.insight_panel import generate_all_insights
+
+        # Generate all insights once
+        insights_dict = generate_all_insights(st.session_state.df_cleaned)
+
+        # Count issues
+        summary_stats = {k: len(v) for k, v in insights_dict.items()}
+        total_issues = sum(summary_stats.values())
+
+        # Custom summary block
+        st.markdown("""
+        <div style='
+            background-color: rgba(59,130,246,0.1);
+            padding: 1.2rem 1.5rem;
+            border-left: 6px solid #3b82f6;
+            border-radius: 0.8rem;
+            margin-bottom: 2rem;
+        '>
+            <h2 style='margin-top: 0; color: #3b82f6;'>📊 Data Quality Summary</h2>
+            <p style='margin-bottom: 1rem;'>Here's a snapshot of your dataset’s statistical health based on smart insights:</p>
+            <ul style='list-style-type: none; padding-left: 0;'>
+        """, unsafe_allow_html=True)
+
+        for key, count in summary_stats.items():
+            color = "#10b981" if count == 0 else "#ef4444"
+            emoji = "✅" if count == 0 else "⚠️"
+            st.markdown(
+                f"<li style='margin-bottom: 0.5rem;'><span style='font-weight: 600; color: {color};'>{emoji} {key}:</span> {count} issue{'s' if count != 1 else ''} detected</li>",
+                unsafe_allow_html=True
+            )
+
+        st.markdown("</ul></div>", unsafe_allow_html=True)
+
+        #line
+        st.markdown("<hr>", unsafe_allow_html=True)
+
+
+
         from insights.null_flagger import flag_nulls
         df = st.session_state.df_cleaned
 
