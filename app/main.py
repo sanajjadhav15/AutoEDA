@@ -296,6 +296,34 @@ elif st.session_state.page == "Smart Insights":
                 st.success("✅ No columns exceed high-cardinality threshold.")
 
 
+        # --- Section: Correlation Insights ---
+        from insights.correlation_warner import high_correlation_pairs, generate_correlation_insights
+
+        st.markdown("### <span style='color:#10b981'>🔗 Correlation Insights</span>", unsafe_allow_html=True)
+        st.info("Detects highly correlated numeric column pairs (absolute correlation > 0.85).")
+
+        high_corr_df = high_correlation_pairs(st.session_state.df_cleaned, threshold=0.85)
+        if not high_corr_df.empty:
+            col1, col2 = st.columns([3, 2])
+
+            with col1:
+                st.subheader("Correlation Pairs")
+                st.dataframe(
+                    high_corr_df.style
+                        .format({"Correlation": "{:.2f}"})
+                        .background_gradient(subset=["Correlation"], cmap="RdPu"),
+                    use_container_width=True
+                )
+
+            with col2:
+                st.markdown("<div style='padding-top: 1.3rem;'></div>", unsafe_allow_html=True)
+                st.markdown("**Flagged Columns:**")
+                corr_insights = generate_correlation_insights(high_corr_df)
+                for insight in corr_insights:
+                    st.markdown(f"<div class='insight-flag'>{insight}</div>", unsafe_allow_html=True)
+        else:
+            st.success("✅ No high correlation feature pairs detected.")
+
 
 
 
