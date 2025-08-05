@@ -370,6 +370,9 @@ elif st.session_state.page == "Exports":
     if "df_cleaned" not in st.session_state:
         st.warning("⚠️ No cleaned dataset found. Please upload and process a dataset first!")
     else:
+        # --------------------------
+        # Export the cleaned data CSV
+        # --------------------------
         from exports.export_csv import convert_df_to_csv
         df_cleaned = st.session_state.df_cleaned
 
@@ -380,9 +383,28 @@ elif st.session_state.page == "Exports":
         # 📥 Download Button (styled + consistent)
         csv_file = convert_df_to_csv(df_cleaned)
         st.download_button(
-            label="⬇️ Download Cleaned CSV",
+            label="⬇️ Download Cleaned Data (CSV)",
             data=csv_file,
             file_name="cleaned_dataset.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
+
+        # --------------------------
+        #Export Summary Statistics
+        # --------------------------
+        from exports.export_summary import get_summary_statistics, convert_summary_to_csv
+        st.markdown(styles.section_block("📊 Export Summary Statistics"), unsafe_allow_html=True)
+        st.write("Download statistical summaries (count, mean, std, min, max, etc.) of your cleaned dataset.")
+
+        summary_df = get_summary_statistics(df_cleaned)
+
+        # ⬇️ Download Button
+        summary_csv = convert_summary_to_csv(summary_df)
+        st.download_button(
+            label="⬇️ Download Summary Statistics (CSV)",
+            data=summary_csv,
+            file_name="summary_statistics.csv",
             mime="text/csv",
             use_container_width=True
         )
