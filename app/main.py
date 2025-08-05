@@ -27,7 +27,7 @@ if "page" not in st.session_state:
 # -------------------------- 
 # Navigation section using real Streamlit buttons
 st.markdown("<div style='text-align: center; margin-top: 1rem;'>", unsafe_allow_html=True)
-nav_col1, nav_col2, nav_col3, nav_col4, nav_col5 = st.columns([1, 1, 1, 1, 1])
+nav_col1, nav_col2, nav_col3, nav_col4, nav_col5, nav_col6 = st.columns([1, 1.2, 1.2, 1.1, 1.1, 1])
 with nav_col1:
     if st.button("🏠 Home", use_container_width=True, key="home_button"):
         st.session_state.page = "Home"
@@ -43,6 +43,9 @@ with nav_col4:
 with nav_col5:
     if st.button("🧠 Smart Insights", use_container_width=True, key="insights_button"):
         st.session_state.page = "Smart Insights"
+with nav_col6:
+    if st.button("📤 Exports", use_container_width=True, key="exports_button"):
+        st.session_state.page = "Exports"
 st.markdown("</div><hr>", unsafe_allow_html=True)
 
 # --------------------------
@@ -362,6 +365,27 @@ elif st.session_state.page == "Smart Insights":
                     st.markdown(f"<div class='insight-flag'>{insight}</div>", unsafe_allow_html=True)
         else:
             st.success("✅ No high correlation feature pairs detected.")
+
+elif st.session_state.page == "Exports":
+    if "df_cleaned" not in st.session_state:
+        st.warning("⚠️ No cleaned dataset found. Please upload and process a dataset first!")
+    else:
+        from exports.export_csv import convert_df_to_csv
+        df_cleaned = st.session_state.df_cleaned
+
+        # 🪄 Section Title Block
+        st.markdown(styles.section_block("📤 Export Cleaned Dataset"), unsafe_allow_html=True)
+        st.write("You can now download your final cleaned dataset for use in machine learning pipelines or external tools.")
+
+        # 📥 Download Button (styled + consistent)
+        csv_file = convert_df_to_csv(df_cleaned)
+        st.download_button(
+            label="⬇️ Download Cleaned CSV",
+            data=csv_file,
+            file_name="cleaned_dataset.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
 
 
 
