@@ -409,6 +409,49 @@ elif st.session_state.page == "Exports":
             use_container_width=True
         )
 
+        # ------------------------------
+        # 📄 Export to PDF Report
+        # ------------------------------
+        st.markdown(styles.section_block("📄 Export PDF Report"), unsafe_allow_html=True)
+        st.write("This will generate a downloadable executive summary report.")
+
+        if st.button("📝 Generate PDF Report"):
+            with st.spinner("🔄 Generating PDF report... Please wait."):
+                from exports.export_pdf import export_pdf_report
+                from insights.null_flagger import flag_nulls
+                from insights.insight_panel import generate_all_insights
+                import eda.basic_viz
+
+                summary_stats = get_summary_statistics(df_cleaned)
+                # Prepare the PDF content
+                # Generate comprehensive plots for PDF
+                from eda.basic_viz import generate_plots_for_export, generate_matplotlib_plots_for_export
+                import tempfile
+                import os
+                
+                # Use matplotlib directly for better reliability
+                from eda.basic_viz import generate_matplotlib_plots_for_export
+                pdf_plots = generate_matplotlib_plots_for_export(df_cleaned)
+                
+                pdf_path = export_pdf_report(
+                    df=df_cleaned,
+                    summary_stats=summary_stats,
+                    missing_report=flag_nulls(df_cleaned),
+                    insights=generate_all_insights(df_cleaned),
+                    plots_dict=pdf_plots
+                )
+
+            st.success("PDF report generated successfully!")
+            with open(pdf_path, "rb") as f:
+                st.download_button(
+                    label="⬇️ Download PDF Report",
+                    data=f,
+                    file_name="autoeda_report.pdf",
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+
+
 
 
 
