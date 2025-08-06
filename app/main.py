@@ -409,47 +409,97 @@ elif st.session_state.page == "Exports":
             use_container_width=True
         )
 
-        # ------------------------------
-        # 📄 Export to PDF Report
-        # ------------------------------
-        st.markdown(styles.section_block("📄 Export PDF Report"), unsafe_allow_html=True)
-        st.write("This will generate a downloadable executive summary report.")
+        #2 columns
+        col1, col2 = st.columns(2)
 
-        if st.button("📝 Generate PDF Report"):
-            with st.spinner("🔄 Generating PDF report... Please wait."):
-                from exports.export_pdf import export_pdf_report
-                from insights.null_flagger import flag_nulls
-                from insights.insight_panel import generate_all_insights
-                import eda.basic_viz
 
-                summary_stats = get_summary_statistics(df_cleaned)
-                # Prepare the PDF content
-                # Generate comprehensive plots for PDF
-                from eda.basic_viz import generate_plots_for_export, generate_matplotlib_plots_for_export
-                import tempfile
-                import os
-                
-                # Use matplotlib directly for better reliability
-                from eda.basic_viz import generate_matplotlib_plots_for_export
-                pdf_plots = generate_matplotlib_plots_for_export(df_cleaned)
-                
-                pdf_path = export_pdf_report(
-                    df=df_cleaned,
-                    summary_stats=summary_stats,
-                    missing_report=flag_nulls(df_cleaned),
-                    insights=generate_all_insights(df_cleaned),
-                    plots_dict=pdf_plots
-                )
+        with col1:
+            # ------------------------------
+            # 📄 Export to PDF Report
+            # ------------------------------
+            st.markdown(styles.section_block("📄 Export PDF Report"), unsafe_allow_html=True)
+            st.write("This will generate a downloadable executive summary report.")
 
-            st.success("PDF report generated successfully!")
-            with open(pdf_path, "rb") as f:
-                st.download_button(
-                    label="⬇️ Download PDF Report",
-                    data=f,
-                    file_name="autoeda_report.pdf",
-                    mime="application/pdf",
-                    use_container_width=True
-                )
+            if st.button("📝 Generate PDF Report"):
+                with st.spinner("🔄 Generating PDF report... Please wait."):
+                    from exports.export_pdf import export_pdf_report
+                    from insights.null_flagger import flag_nulls
+                    from insights.insight_panel import generate_all_insights
+                    import eda.basic_viz
+
+                    summary_stats = get_summary_statistics(df_cleaned)
+                    # Prepare the PDF content
+                    # Generate comprehensive plots for PDF
+                    from eda.basic_viz import generate_plots_for_export, generate_matplotlib_plots_for_export
+                    import tempfile
+                    import os
+                    
+                    # Use matplotlib directly for better reliability
+                    from eda.basic_viz import generate_matplotlib_plots_for_export
+                    pdf_plots = generate_matplotlib_plots_for_export(df_cleaned)
+                    
+                    pdf_path = export_pdf_report(
+                        df=df_cleaned,
+                        summary_stats=summary_stats,
+                        missing_report=flag_nulls(df_cleaned),
+                        insights=generate_all_insights(df_cleaned),
+                        plots_dict=pdf_plots
+                    )
+
+                st.success("PDF report generated successfully!")
+                with open(pdf_path, "rb") as f:
+                    st.download_button(
+                        label="⬇️ Download PDF Report",
+                        data=f,
+                        file_name="autoeda_report.pdf",
+                        mime="application/pdf",
+                        use_container_width=True
+                    )
+        
+        with col2:
+            # ------------------------------
+            # 📄 Export HTML Report
+            # ------------------------------
+            st.markdown(styles.section_block("📄 Export HTML Report"), unsafe_allow_html=True)
+            st.write("Generate an interactive HTML report with visualizations and insights.")
+
+            if st.button("📝 Generate HTML Report"):
+                with st.spinner("🔄 Generating HTML report... Please wait."):
+                    from exports.export_html import export_html_report
+                    from insights.null_flagger import flag_nulls
+                    from insights.insight_panel import generate_all_insights
+                    from eda.basic_viz import generate_plots_for_export
+
+                    # Prepare data for HTML export
+                    summary_stats = get_summary_statistics(df_cleaned)
+                    missing_report = flag_nulls(df_cleaned)
+                    insights_dict = generate_all_insights(df_cleaned)
+                    
+                    # Flatten insights into a list
+                    insights_list = []
+                    for category, items in insights_dict.items():
+                        insights_list.extend(items)
+                    
+                    # Generate plots for export
+                    plots_dict = generate_plots_for_export(df_cleaned)
+                    
+                    html_path = export_html_report(
+                        df=df_cleaned,
+                        summary_stats=summary_stats,
+                        missing_report=missing_report,
+                        insights=insights_list,
+                        plots=plots_dict
+                    )
+
+                st.success("✅ HTML report generated!")
+                with open(html_path, "rb") as f:
+                    st.download_button(
+                        label="⬇️ Download HTML Report",
+                        data=f,
+                        file_name="autoeda_report.html",
+                        mime="text/html",
+                        use_container_width=True
+                    )
 
 
 
