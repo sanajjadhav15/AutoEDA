@@ -8,6 +8,7 @@ from eda.type_inference import detect_column_types
 from eda.summary_stats import generate_summary
 from eda.missing_values import get_missing_value_report, plot_missing_bar
 from eda.preprocess import preprocess_data
+from ui.about import show_about_section
 
 st.set_page_config(page_title="AutoEDA", layout="wide")
 
@@ -53,6 +54,8 @@ st.markdown("</div><hr>", unsafe_allow_html=True)
 # --------------------------
 if st.session_state.page == "Home":
     render_landing_page()
+    show_about_section()
+    
 
 elif st.session_state.page == "Upload":
     df = upload_file()
