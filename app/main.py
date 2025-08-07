@@ -10,7 +10,11 @@ from eda.missing_values import get_missing_value_report, plot_missing_bar
 from eda.preprocess import preprocess_data
 from ui.about import show_about_section
 
-st.set_page_config(page_title="AutoEDA", layout="wide")
+st.set_page_config(
+    page_title="AutoEDA – Smart Data Analysis",
+    page_icon="app/logo.png",  # or "🧠", "📊", or any emoji
+    layout="wide"
+)
 
 # --------------------------
 # Inject global CSS
