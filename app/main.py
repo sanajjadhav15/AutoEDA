@@ -12,7 +12,7 @@ from ui.about import show_about_section
 
 st.set_page_config(
     page_title="AutoEDA – Smart Data Analysis",
-    page_icon="app/logo.png",  # or "🧠", "📊", or any emoji
+    page_icon="app/image.png",  # or "🧠", "📊", or any emoji
     layout="wide"
 )
 
