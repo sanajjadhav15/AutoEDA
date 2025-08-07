@@ -500,6 +500,45 @@ elif st.session_state.page == "Exports":
                         mime="text/html",
                         use_container_width=True
                     )
+        
+        # ------------------------------
+        # 📦 Export Charts as ZIP
+        # ------------------------------
+        st.markdown(styles.section_block("📦 Export Charts as ZIP"), unsafe_allow_html=True)
+        st.write("This will save all key charts (as images) and bundle them into a downloadable ZIP file.")
+
+        if st.button("📦 Generate Charts ZIP"):
+            with st.spinner("🔄 Generating charts ZIP... Please wait."):
+                from exports.export_zip import save_all_charts
+                from exports.save_charts import zip_chart_images
+                from eda.basic_viz import generate_plots_for_export
+
+                # Generate plots for export
+                plots_dict = generate_plots_for_export(df_cleaned)
+
+                # Step 1: Save all charts
+                saved_files = save_all_charts(plots_dict)
+                
+                if saved_files:
+                    # Step 2: Zip them
+                    zip_path, zip_tempdir = zip_chart_images(saved_files)
+
+                    # Step 3: Streamlit download
+                    with open(zip_path, "rb") as f:
+                        st.download_button(
+                            label="⬇️ Download All Charts (.zip)",
+                            data=f,
+                            file_name="all_charts.zip",
+                            mime="application/zip",
+                            use_container_width=True
+                        )
+                    
+                    st.success(f"✅ Generated ZIP with {len(saved_files)} chart(s).")
+                else:
+                    st.warning("⚠️ No charts could be generated for this dataset.")
+
+
+
 
 
 
